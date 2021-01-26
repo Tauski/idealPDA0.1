@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -28,6 +29,8 @@ public class NotepadActivity extends AppCompatActivity {
 
     private EditText ui_text;
     private Button ui_button;
+    private Button ui_openButton;
+
 
     private String saveString;
     private String userString;
@@ -41,6 +44,7 @@ public class NotepadActivity extends AppCompatActivity {
 
         ui_text = (EditText) findViewById(R.id.etWrite);
         ui_button = (Button)findViewById(R.id.bSave);
+        ui_openButton = (Button)findViewById(R.id.bOpen);
 
         SharedPreferences sp1 = getSharedPreferences("Credentials",MODE_PRIVATE);
         userString = sp1.getString("username",null);
@@ -77,6 +81,14 @@ public class NotepadActivity extends AppCompatActivity {
                 };
                 RequestQueue requestQueue = Volley.newRequestQueue(NotepadActivity.this);
                 requestQueue.add(stringRequest);
+            }
+        });
+
+
+        ui_openButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity( new Intent(NotepadActivity.this,NoteSelectActivity.class));
             }
         });
     }
