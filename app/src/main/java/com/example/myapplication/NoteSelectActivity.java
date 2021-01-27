@@ -2,11 +2,13 @@ package com.example.myapplication;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,10 +35,11 @@ public class NoteSelectActivity extends AppCompatActivity {
     private static final String TAG = "FROM NOTE SELECT ACTIVITY";
 
     //Initializing UI and variables
-    private List<NotesBuilder> notesList = new ArrayList<>();
-    private NotesAdapter nAdapter;
-    private RecyclerView notesRecycler;
+    private ArrayList<String> title;
+    private RecyclerView rvNotes;
+    private LinearLayoutManager lManager;
     private String userString;
+    private NotesAdapter adapter;
 
     //Custom url string for php script that retrieves all given users notes
     private final String urlAllNotes = "http://192.168.1.103:8012/project/userNotesGet.php";
@@ -44,16 +48,15 @@ public class NoteSelectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_select);
-
+        //populate array list
+        title = new ArrayList<String>();
         //initialize all UI elements and retrieve notes from db
-        notesRecycler = (RecyclerView) findViewById(R.id.notes);
-        nAdapter = new NotesAdapter(notesList);
-        RecyclerView.LayoutManager mLayoutManager =
-                new LinearLayoutManager(getApplicationContext());
-        notesRecycler.setLayoutManager(mLayoutManager);
-        notesRecycler.setItemAnimator(new DefaultItemAnimator());
-        notesRecycler.setAdapter(nAdapter);
-        prepareNotes();
+        rvNotes = (RecyclerView)findViewById(R.id.rvNotes);
+        rvNotes.setLayoutManager(lManager = new LinearLayoutManager(NoteSelectActivity.this));
+        DividerItemDecoration decoration = new DividerItemDecoration(rvNotes.getContext(),lManager.getOrientation());
+        rvNotes.addItemDecoration(decoration);
+        adapter = new NotesAdapter(this,title);
+        rvNotes.setAdapter(adapter);
 
         //using credentials from shared preferences
         SharedPreferences sp2 = getSharedPreferences("Credentials",MODE_PRIVATE);
@@ -68,8 +71,11 @@ public class NoteSelectActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //for now testing to get data, will implement the list soon
-                        Toast.makeText(NoteSelectActivity.this,response.toString(),Toast.LENGTH_LONG).show();
+                        String[] notes = response.split(",");
+                        for(int i = 0; i<notes.length;i++){
+                            title.add(notes[i]);
+                        }
+                        Toast.makeText(NoteSelectActivity.this,response,Toast.LENGTH_LONG).show();
                     }
                 },
                 new Response.ErrorListener() {
