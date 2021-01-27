@@ -8,9 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+
+//Class to hold all buttons that open different activities
 public class FrontActivity extends AppCompatActivity {
 
-    //Buttons
+    //Initialize UI elements and variables
     private ImageButton ui_logout;
     private ImageButton ui_calendar;
     private ImageButton ui_map;
@@ -33,7 +35,7 @@ public class FrontActivity extends AppCompatActivity {
         ui_drive = (ImageButton)findViewById(R.id.bDrive);
         ui_camera = (ImageButton)findViewById(R.id.bCamera);
 
-        //all onclick methods
+        //all onclick methods that open different activities
         ui_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,7 +65,7 @@ public class FrontActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Will be implemented after I figure out Google billing and api usage
-                //startActivity(new Intent(FrontActivity.this,DriveActivity.class));
+                //startActivity(new Intent(FrontActivity.this,SearchActivity.class));
             }
         });
         ui_drive.setOnClickListener(new View.OnClickListener() {

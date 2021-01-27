@@ -32,6 +32,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+//CalendarAddactivity holds UI interactions with adding events to database
 public class CalendarAddActivity extends AppCompatActivity {
 
     //Initializing UI elements and variables
@@ -45,7 +46,6 @@ public class CalendarAddActivity extends AppCompatActivity {
     private EditText ui_eventDate;
     private Button saveButton;
     private String compinedDateTime;
-
     private String calendarDate;
 
     //holder for address to php script that inserts calendar event into database
@@ -57,6 +57,7 @@ public class CalendarAddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_event);
 
+        //Find corresponding objects
         ui_eventName = (EditText)findViewById(R.id.etEventName);
         ui_eventDescription = (EditText)findViewById(R.id.etEventName);
         ui_eventLocation = (EditText)findViewById(R.id.etEventLocation);
@@ -66,14 +67,14 @@ public class CalendarAddActivity extends AppCompatActivity {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        //Time and date pickers for their EditText fields, much better UX than number pad, but not 100% necessary
+        //Custom handlers for time and date pickers for their EditText fields, much better UX than number pad, but not 100% necessary
         ui_eventDate = (EditText)findViewById(R.id.etEventDate);
-
         calendarDate = getIntent().getStringExtra("EXTRA_CALENDAR_DATE");
         Toast.makeText(CalendarAddActivity.this,calendarDate,Toast.LENGTH_LONG).show();
         ui_eventDate.setText(calendarDate);
         ui_eventDate.setInputType(InputType.TYPE_NULL);
 
+        //date picker
         ui_eventDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -128,7 +129,7 @@ public class CalendarAddActivity extends AppCompatActivity {
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        //Get user from shared preferences, use this user to add row for calendar event in database
+        //Get current user from shared preferences, use this user to add row for calendar event in database
         SharedPreferences sp2 = getSharedPreferences("Credentials",MODE_PRIVATE);
         userString = sp2.getString("username",null);
 
@@ -172,7 +173,5 @@ public class CalendarAddActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

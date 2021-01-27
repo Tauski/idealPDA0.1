@@ -59,7 +59,7 @@ public class RegistrationActivity extends AppCompatActivity {
         eRegister = findViewById(R.id.btnRegister);
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /*Only used before google signin
+        /*Use this side when google signing is implemented
 
                 //alert dialogs to give credentials with custom layout
                 final AlertDialog.Builder builder = new AlertDialog.Builder(RegistrationActivity.this);
@@ -155,7 +155,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final Pattern rfc2822 = Pattern.compile(
             "^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
     );
-
     //Function for validating the input credentials from the user
     boolean validate(String name, String email, String password)
     {
@@ -171,7 +170,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
             return false;
         }
-
         return true;
     }
 }

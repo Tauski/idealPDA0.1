@@ -24,17 +24,17 @@ import java.util.Map;
 
 public class NotepadActivity extends AppCompatActivity {
 
-
+    //TAG for error logs
     private static final String TAG = "FROM NOTEPAD ACTIVITY";
 
+    //Initializing UI and variables
     private EditText ui_text;
     private Button ui_button;
     private Button ui_openButton;
-
-
     private String saveString;
     private String userString;
 
+    //URL string for saving notes to database
     String urlNotepad = "http://192.168.1.103:8012/project/userNotepad.php";
 
     @Override
@@ -42,17 +42,24 @@ public class NotepadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notepad);
 
+        //connect variables
         ui_text = (EditText) findViewById(R.id.etWrite);
         ui_button = (Button)findViewById(R.id.bSave);
         ui_openButton = (Button)findViewById(R.id.bOpen);
 
+        //get user credentials from shared preferences, to use username in database
         SharedPreferences sp1 = getSharedPreferences("Credentials",MODE_PRIVATE);
         userString = sp1.getString("username",null);
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
         ui_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveString = ui_text.getText().toString();
+                //Handling request with volley
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, urlNotepad,
                         new Response.Listener<String>() {
                             @Override
@@ -85,6 +92,9 @@ public class NotepadActivity extends AppCompatActivity {
         });
 
 
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //list all notes from this user
         ui_openButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

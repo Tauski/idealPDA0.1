@@ -28,15 +28,17 @@ import java.util.Map;
 
 public class NoteSelectActivity extends AppCompatActivity {
 
+    //TAG for error logs
     private static final String TAG = "FROM NOTE SELECT ACTIVITY";
 
+    //Initializing UI and variables
     private List<NotesBuilder> notesList = new ArrayList<>();
     private NotesAdapter nAdapter;
     private RecyclerView notesRecycler;
     private String userString;
+
+    //Custom url string for php script that retrieves all given users notes
     private final String urlAllNotes = "http://192.168.1.103:8012/project/userNotesGet.php";
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,30 +55,21 @@ public class NoteSelectActivity extends AppCompatActivity {
         notesRecycler.setAdapter(nAdapter);
         prepareNotes();
 
+        //using credentials from shared preferences
         SharedPreferences sp2 = getSharedPreferences("Credentials",MODE_PRIVATE);
         userString = sp2.getString("username",null);
     }
 
     //get from server side
     private void prepareNotes() {
-        /*
-        File directory;
-        directory = getFilesDir();
-        File[] files = directory.listFiles();
-        String theFile;
-        for (int f = 1; f <= files.length; f++) {
-            theFile = "Note" + f + ".txt";
-            NotesBuilder note = new NotesBuilder(theFile, Open(theFile));
-            notesList.add(note);
-        }
-        */
 
+        //Request handled by volley
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlAllNotes,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        //for now testing to get data, will implement the list soon
                         Toast.makeText(NoteSelectActivity.this,response.toString(),Toast.LENGTH_LONG).show();
-
                     }
                 },
                 new Response.ErrorListener() {
@@ -99,6 +92,11 @@ public class NoteSelectActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    //opening selected note for modifications
     public String Open(String fileName) {
         String content = "";
         try {
@@ -119,7 +117,6 @@ public class NoteSelectActivity extends AppCompatActivity {
         } catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
-
         return content;
     }
 }

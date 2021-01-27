@@ -19,19 +19,21 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+//Calendar activity holds UI interactions with calendar and has adding events button
 public class CalendarActivity extends AppCompatActivity {
 
+    //Initializing UI elements and variables
     private CalendarView ui_calendar;
     private FloatingActionButton ui_addNewEvent;
     private ScrollView ui_scrollview;
     private String date;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
+        //Find corresponding objects
         ui_calendar = (CalendarView)findViewById(R.id.cvMain);
         ui_addNewEvent = (FloatingActionButton)findViewById(R.id.fabAddEvent) ;
         ui_scrollview = (ScrollView)findViewById(R.id.svEventHolder);
@@ -48,7 +50,7 @@ public class CalendarActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(),date,Toast.LENGTH_SHORT).show();
             }
         });
-        //adds event to database
+        //Opens a new event page
         ui_addNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

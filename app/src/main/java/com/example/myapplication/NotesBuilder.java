@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
 
+//Custom note builder, having all data handles we would need
+//Using Adam Sinicki's tutorial
 public class NotesBuilder {
 
     private String title, content;

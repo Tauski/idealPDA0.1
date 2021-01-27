@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+//Custom recycleview adapter to fit our notes, they will have title and content.
+//By clicking note we will open it and enable modifications
+//Using Adam Sinicki's tutorial
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder> {
 
 private List<NotesBuilder> notesList;
@@ -23,7 +26,6 @@ public class MyViewHolder extends RecyclerView.ViewHolder {
 
     }
 }
-
     public NotesAdapter(List <NotesBuilder> notesList) {
         this.notesList = notesList;
     }

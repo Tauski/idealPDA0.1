@@ -39,33 +39,27 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    //TAG for log finding
     private static final String TAG = "FROM MAIN ACTIVITY";
-    //url should be http not https while doing local stuff
-    String url2 = "http://192.168.1.103:8012/project/UserLogin.php";
 
-    //ui elements
+    //Initialize UI elements and variables
     private EditText ui_name;
     private EditText ui_password;
     private Button ui_login;
     private TextView ui_register;
-
     private SignInButton ui_signInButton;
-
-    //Strings to hold name and pw
     String s_name;
     String s_password;
+
+    //url for calling php script that checks login credentials, should be http not https
+    String url2 = "http://192.168.1.103:8012/project/UserLogin.php";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //google activity sign in stuff
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        final GoogleSignInClient m_googleSignInClient = GoogleSignIn.getClient(this,gso);
 
 
         //implementing ui elements
@@ -75,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         ui_register = (TextView)findViewById(R.id.tvRegister);
         ui_signInButton = (SignInButton)findViewById(R.id.sign_in_button);
 
-        //if client presses register textview, send into new activity
+        //if client presses register textview, send into new activity for creating new user
         ui_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,10 +77,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //google activity sign in stuff (maybe implemented after checking out google billing and its api)
+        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        final GoogleSignInClient m_googleSignInClient = GoogleSignIn.getClient(this,gso);
+        */
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+        /*
         //if client wants to login using google account
         ui_signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(signInIntent, 1);
             }
         });
-
+        */
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -115,8 +116,10 @@ public class MainActivity extends AppCompatActivity {
                 s_name = ui_name.getText().toString();
                 s_password = ui_password.getText().toString();
 
+                //create request string using volley
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url2,
                         new Response.Listener<String>() {
+                            //Successful response
                             @Override
                             public void onResponse(String response) {
                                 if(response.matches("Data Matched")){
@@ -135,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                         },
+                        //error response
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
@@ -161,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+    /* More Google stuff for handling account details
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode,resultCode,data);
@@ -178,11 +182,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     //handle account details. Not used at the moment
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        //GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-
-    }
+    //private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+    //GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+    //}
+    */
 }
