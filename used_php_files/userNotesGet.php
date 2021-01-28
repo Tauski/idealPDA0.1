@@ -10,24 +10,21 @@
  
  $Sql_Query = "SELECT note FROM usernotes WHERE user = '$FL_NAME' AND note IS NOT NULL";
  
- $result = mysqli_query($con,$Sql_Query);
+$result = array();
+$result['data'] = array();
+$response = mysqli_query($con,$Sql_Query);
 
 #incomplete as of yet, it only echoes the first element
 
-if( mysqli_num_rows($result) > 0 ){
-
-  $mbno_arr = array();
-
-    while ($row = mysqli_fetch_array($result))
-        $mbno_arr[] = $row[0];
-
-    if( count($mbno_arr) > 0 ){    	
-        echo implode(',',array_filter($mbno_arr));
-} 
-   else{
-        echo 'No number is there';
+while($row = mysqli_fetch_array($response))
+{
+		$index['note'] = $row['0'];
+		array_push($result['data'], $index);
 }
+
+$result["success"] = "1";
+echo json_encode($result);
+
 }
-}
-mysqli_free_result($result);
+mysqli_close($con);
 ?>

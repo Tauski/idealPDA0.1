@@ -119,7 +119,6 @@ public class RegistrationActivity extends AppCompatActivity {
                             new Response.Listener<String>() {
                                 @Override
                                 public void onResponse(String response) {
-                                    //Toast.makeText(RegistrationActivity.this, response.trim(), Toast.LENGTH_SHORT).show();
                                     if(response.matches("user created successfully. You may now login using your credentials")){
                                         startActivity(new Intent(RegistrationActivity.this,MainActivity.class));
                                     }

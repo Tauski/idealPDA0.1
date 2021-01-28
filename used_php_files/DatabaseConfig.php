@@ -1,5 +1,5 @@
 <?php
-//HOST NAME
+//HOST NAME localhost or your pc ipv4 address, check from cmd if you're not sure
 $HostName = "localhost";
 
 //Database user name (preferably not root)

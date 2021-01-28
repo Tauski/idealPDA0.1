@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.util.EventLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,34 +11,34 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-//Custom recycleview adapter to fit our notes, they will have title and content.
-//By clicking note we will open it and enable modifications
+//Custom recycleview adapter to fit our events, they will have title and content.
+//By clicking events we will open it and enable modifications
 //Using Adam Sinicki's tutorial
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
+public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder>{
 
     private List<String> mData;
     private LayoutInflater mInflater;
-    private OnNoteListener mOnNoteListener;
+    private OnEventPressListener mOnEventPressListener;
 
     // data is passed into the constructor
-    public NotesAdapter(Context context, List<String> data, OnNoteListener onNoteListener) {
+    public EventsAdapter(Context context, List<String> data, OnEventPressListener onEventPressListener) {
         this.mInflater = LayoutInflater.from(context);
-        this.mOnNoteListener = onNoteListener;
+        this.mOnEventPressListener = onEventPressListener;
         this.mData = data;
     }
 
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.note_list_row, parent, false);
-        return new ViewHolder(view,mOnNoteListener );
+        View view = mInflater.inflate(R.layout.event_list_row, parent, false);
+        return new ViewHolder(view,mOnEventPressListener );
     }
 
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.myTextView.setText(animal);
+        String event = mData.get(position);
+        holder.myTextView.setText(event);
     }
 
     // total number of rows
@@ -50,23 +51,23 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder>{
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
-        OnNoteListener onNoteListener;
+        OnEventPressListener onEventPressListener;
 
-        ViewHolder(View itemView, OnNoteListener onNoteListener) {
+        ViewHolder(View itemView, OnEventPressListener onEventPressListener) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.tvTitle);
-            this.onNoteListener = onNoteListener;
+            this.onEventPressListener = onEventPressListener;
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            onNoteListener.onNoteClick(getAdapterPosition());
+            onEventPressListener.onEventPressClick(getAdapterPosition());
         }
     }
 
-    public interface OnNoteListener{
-        void onNoteClick(int position);
+    public interface OnEventPressListener{
+        void onEventPressClick(int position);
     }
 
     // convenience method for getting data at click position

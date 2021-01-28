@@ -1,9 +1,11 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,8 +18,13 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,7 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NoteSelectActivity extends AppCompatActivity {
+public class NoteSelectActivity extends AppCompatActivity implements NotesAdapter.OnNoteListener{
 
     //TAG for error logs
     private static final String TAG = "FROM NOTE SELECT ACTIVITY";
@@ -38,7 +45,7 @@ public class NoteSelectActivity extends AppCompatActivity {
     private ArrayList<String> title;
     private RecyclerView rvNotes;
     private LinearLayoutManager lManager;
-    private String userString;
+    private String userString = "";
     private NotesAdapter adapter;
 
     //Custom url string for php script that retrieves all given users notes
@@ -48,54 +55,69 @@ public class NoteSelectActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_select);
-        //populate array list
+        //using credentials from shared preferences
+        SharedPreferences sp2 = getSharedPreferences("Credentials",MODE_PRIVATE);
+        userString = sp2.getString("username",null);
+
+        //Init UI and variables
         title = new ArrayList<String>();
-        //initialize all UI elements and retrieve notes from db
         rvNotes = (RecyclerView)findViewById(R.id.rvNotes);
         rvNotes.setLayoutManager(lManager = new LinearLayoutManager(NoteSelectActivity.this));
         DividerItemDecoration decoration = new DividerItemDecoration(rvNotes.getContext(),lManager.getOrientation());
         rvNotes.addItemDecoration(decoration);
-        adapter = new NotesAdapter(this,title);
+        adapter = new NotesAdapter(this, title, this);
         rvNotes.setAdapter(adapter);
 
-        //using credentials from shared preferences
-        SharedPreferences sp2 = getSharedPreferences("Credentials",MODE_PRIVATE);
-        userString = sp2.getString("username",null);
+        retrieveData();
     }
 
-    //get from server side
-    private void prepareNotes() {
+    public void retrieveData(){
 
-        //Request handled by volley
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlAllNotes,
+
+        StringRequest request = new StringRequest(Request.Method.POST, urlAllNotes,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        String[] notes = response.split(",");
-                        for(int i = 0; i<notes.length;i++){
-                            title.add(notes[i]);
+
+                        title.clear();
+                        try{
+
+                            JSONObject jsonObject = new JSONObject(response);
+                            String sucess = jsonObject.getString("success");
+                            JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+                            if(sucess.equals("1")){
+
+                                for(int i=0;i<jsonArray.length();i++){
+
+                                    JSONObject object = jsonArray.getJSONObject(i);
+                                    String note = object.getString("note");
+                                    title.add(note);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
                         }
-                        Toast.makeText(NoteSelectActivity.this,response,Toast.LENGTH_LONG).show();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(NoteSelectActivity.this,error.toString(),Toast.LENGTH_LONG).show();
-                        Log.i(TAG, "onErrorResponse: FROM LOGIN -> " +error.toString());
+                        catch (JSONException e){
 
+                            e.printStackTrace();
+                        }
                     }
-                }){
+                }, new Response.ErrorListener() {
             @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String,String>();
-                params.put("f_name", userString);
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(NoteSelectActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
 
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("f_name",userString);
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(NoteSelectActivity.this);
-        requestQueue.add(stringRequest);
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(request);
     }
 
 
@@ -124,5 +146,16 @@ public class NoteSelectActivity extends AppCompatActivity {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
         return content;
+    }
+
+    @Override
+    public void onNoteClick(int position) {
+        Log.d(TAG, "onNoteClick: clicked");
+        Toast.makeText(this,"FROM CLICK: " + position, Toast.LENGTH_SHORT).show();
+
+        //Intent intent = new Intent(this, NotepadActivity.class);
+        //title.get(position);
+        // send note as extra to new notepad activity
+        // intent.putExtra();
     }
 }

@@ -144,6 +144,7 @@ public class CalendarAddActivity extends AppCompatActivity {
                             public void onResponse(String response) {
                                 if(response.matches("Event saved")){
                                     Toast.makeText(CalendarAddActivity.this,response.toString(),Toast.LENGTH_LONG).show();
+                                    ui_eventDate.setText("");
                                 }else{
                                     Toast.makeText(CalendarAddActivity.this,response.toString(),Toast.LENGTH_LONG).show();
                                 }
@@ -170,7 +171,7 @@ public class CalendarAddActivity extends AppCompatActivity {
                 RequestQueue requestQueue = Volley.newRequestQueue(CalendarAddActivity.this);
                 requestQueue.add(stringRequest);
                 //close activity
-                finish();
+                //finish();
             }
         });
     }
