@@ -45,11 +45,10 @@ public class CalendarAddActivity extends AppCompatActivity {
     private EditText ui_eventTime;
     private EditText ui_eventDate;
     private Button saveButton;
-    private String compinedDateTime;
     private String calendarDate;
 
     //holder for address to php script that inserts calendar event into database
-    private String urlCalendarEvent="http://192.168.1.103:8012/project/caledarEvents.php";
+    private String urlCalendarEvent="http://192.168.1.103:8012/project/userEventsInsert.php";
     private String userString;
 
     @Override
@@ -59,7 +58,7 @@ public class CalendarAddActivity extends AppCompatActivity {
 
         //Find corresponding objects
         ui_eventName = (EditText)findViewById(R.id.etEventName);
-        ui_eventDescription = (EditText)findViewById(R.id.etEventName);
+        ui_eventDescription = (EditText)findViewById(R.id.etEventDescription);
         ui_eventLocation = (EditText)findViewById(R.id.etEventLocation);
         saveButton = (Button)findViewById(R.id.bSaveEvent);
 
@@ -87,7 +86,6 @@ public class CalendarAddActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                                Toast.makeText(CalendarAddActivity.this,Integer.toString(monthOfYear),Toast.LENGTH_LONG).show();
                                 String dateString = "";
                                 if(monthOfYear < 9){
                                      dateString = Integer.toString(year) + "-0" + Integer.toString(monthOfYear+1) + "-" + Integer.toString(dayOfMonth);
@@ -137,17 +135,19 @@ public class CalendarAddActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                compinedDateTime = ui_eventDate.getText().toString() + " " +  ui_eventTime.getText().toString();
+
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, urlCalendarEvent,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
+                                Toast.makeText(CalendarAddActivity.this,response,Toast.LENGTH_LONG).show();
+
                                 if(response.matches("Event saved")){
                                     Toast.makeText(CalendarAddActivity.this,response.toString(),Toast.LENGTH_LONG).show();
-                                    ui_eventDate.setText("");
                                 }else{
                                     Toast.makeText(CalendarAddActivity.this,response.toString(),Toast.LENGTH_LONG).show();
                                 }
+
                             }
                         },
                         new Response.ErrorListener() {
@@ -162,7 +162,8 @@ public class CalendarAddActivity extends AppCompatActivity {
                         Map<String,String> params = new HashMap<String, String>();
                         params.put("fl_name",userString);
                         params.put("event",ui_eventName.getText().toString());
-                        params.put("etime",compinedDateTime);
+                        params.put("edate",ui_eventDate.getText().toString());
+                        params.put("etime",ui_eventTime.getText().toString());
                         params.put("elocation",ui_eventLocation.getText().toString());
                         params.put("edescription",ui_eventDescription.getText().toString());
                         return params;

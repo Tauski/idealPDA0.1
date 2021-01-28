@@ -7,27 +7,25 @@
  $con = mysqli_connect($HostName,$User,$Password,$dbName,$Port);
  
  $FL_NAME = $_POST['f_name'];
- 
- $Sql_Query = "SELECT note FROM usernotes WHERE user = '$FL_NAME'";
+ $EDATE = $_POST['date'];
+
+ $Sql_Query = "SELECT event, timeofevent FROM userevents WHERE user = '$FL_NAME' AND dateofevent = '$EDATE'";
  
 $result = array();
 $result['data'] = array();
 $response = mysqli_query($con,$Sql_Query);
 
-#incomplete as of yet, it only echoes the first element
-
 while($row = mysqli_fetch_array($response))
 {
-		if($row['note'] != '' || $row['note'] != NULL)
+	if($row['event'] != '' || $row['event'] != NULL)
 	{
-		$index['note'] = $row['0'];
+		$index['event'] = $row['0'];
 		array_push($result['data'], $index);
 	}		
 }
 
 $result["success"] = "1";
 echo json_encode($result);
-
 }
 mysqli_close($con);
 ?>

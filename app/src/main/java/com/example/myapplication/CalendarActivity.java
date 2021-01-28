@@ -84,7 +84,6 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
                 String curMonth = String.valueOf(month+1);
                 String curDay = String.valueOf(day);
                 date = curYear + "-" + curMonth + "-" + curDay;
-                Toast.makeText(getApplicationContext(),date,Toast.LENGTH_SHORT).show();
                 retrieveEvents();
             }
         });
@@ -109,7 +108,7 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
+                        Toast.makeText(CalendarActivity.this, response, Toast.LENGTH_SHORT).show();
                         eventList.clear();
                         try{
 
@@ -121,8 +120,8 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
 
                                 for(int i=0;i<jsonArray.length();i++){
                                     JSONObject object = jsonArray.getJSONObject(i);
-                                    String note = object.getString("event");
-                                    eventList.add(note);
+                                    String event = object.getString("event");
+                                    eventList.add(event);
                                     eventsAdapter.notifyDataSetChanged();
                                 }
                             }
@@ -144,6 +143,7 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
 
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("f_name",userString);
+                params.put("date",date);
                 return params;
             }
         };
@@ -158,5 +158,6 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
     @Override
     public void onEventPressClick(int position) {
         Toast.makeText(this,"click notified", Toast.LENGTH_SHORT).show();
+        //startActivity(new Intent(this,eventScreen.class));
     }
 }
