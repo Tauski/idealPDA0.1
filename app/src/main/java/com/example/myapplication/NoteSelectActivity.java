@@ -43,6 +43,7 @@ public class NoteSelectActivity extends AppCompatActivity implements NotesAdapte
 
     //Initializing UI and variables
     private ArrayList<String> title;
+    private ArrayList<NotesBuilder> notes;
     private RecyclerView rvNotes;
     private LinearLayoutManager lManager;
     private String userString = "";
@@ -50,6 +51,10 @@ public class NoteSelectActivity extends AppCompatActivity implements NotesAdapte
 
     //Custom url string for php script that retrieves all given users notes
     private final String urlAllNotes = "http://192.168.1.103:8012/project/userNotesGet.php";
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,14 +76,15 @@ public class NoteSelectActivity extends AppCompatActivity implements NotesAdapte
         retrieveData();
     }
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     public void retrieveData(){
-
-
         StringRequest request = new StringRequest(Request.Method.POST, urlAllNotes,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
                         title.clear();
                         try{
 
@@ -87,9 +93,7 @@ public class NoteSelectActivity extends AppCompatActivity implements NotesAdapte
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
 
                             if(sucess.equals("1")){
-
                                 for(int i=0;i<jsonArray.length();i++){
-
                                     JSONObject object = jsonArray.getJSONObject(i);
                                     String note = object.getString("note");
                                     title.add(note);
@@ -98,7 +102,6 @@ public class NoteSelectActivity extends AppCompatActivity implements NotesAdapte
                             }
                         }
                         catch (JSONException e){
-
                             e.printStackTrace();
                         }
                     }
@@ -110,7 +113,6 @@ public class NoteSelectActivity extends AppCompatActivity implements NotesAdapte
         }) {
             @Override
             protected Map<String, String> getParams() {
-
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("f_name",userString);
                 return params;
@@ -124,38 +126,12 @@ public class NoteSelectActivity extends AppCompatActivity implements NotesAdapte
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    //opening selected note for modifications
-    public String Open(String fileName) {
-        String content = "";
-        try {
-            InputStream in = openFileInput(fileName);
-            if (in != null) {
-                InputStreamReader tmp = new InputStreamReader(in);
-                BufferedReader reader = new BufferedReader(tmp);
-                String str;
-                StringBuilder buf = new StringBuilder();
-                while ((str = reader.readLine()) != null) {
-                    buf.append(str + "\n");
-                }
-                in.close();
-
-                content = buf.toString();
-            }
-        } catch (java.io.FileNotFoundException e) {
-        } catch (Throwable t) {
-            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
-        }
-        return content;
-    }
-
     @Override
     public void onNoteClick(int position) {
-        Log.d(TAG, "onNoteClick: clicked");
-        Toast.makeText(this,"FROM CLICK: " + position, Toast.LENGTH_SHORT).show();
 
-        //Intent intent = new Intent(this, NotepadActivity.class);
-        //title.get(position);
-        // send note as extra to new notepad activity
-        // intent.putExtra();
+        Intent intent = new Intent(this, NotepadActivity.class);
+        intent.putExtra("EXTRA_NOTE",title.get(position));
+        startActivity(intent);
+        finish();
     }
 }

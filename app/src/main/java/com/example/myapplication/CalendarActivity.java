@@ -39,6 +39,7 @@ import java.util.Map;
 //Calendar activity holds UI interactions with calendar and has adding events button
 public class CalendarActivity extends AppCompatActivity implements EventsAdapter.OnEventPressListener {
 
+    //For error logs
     private static final String TAG = "FROM CALENDAR ACTIVITY";
 
     //Initializing UI elements and variables
@@ -54,6 +55,10 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
     //Custom url string for php script that retrieves all users events for day
     private final String urlEvents = "http://192.168.1.103:8012/project/userEventsGet.php";
 
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +72,6 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
         eventList = new ArrayList<String>();
         ui_calendar = (CalendarView)findViewById(R.id.cvMain);
         ui_addNewEvent = (FloatingActionButton)findViewById(R.id.fabAddEvent) ;
-
         ui_events = (RecyclerView)findViewById(R.id.rvEvents);
         ui_events.setLayoutManager(lManager = new LinearLayoutManager(CalendarActivity.this));
         DividerItemDecoration decoration = new DividerItemDecoration(ui_events.getContext(),lManager.getOrientation());
@@ -87,7 +91,7 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
                 retrieveEvents();
             }
         });
-        //Opens a new event page
+        //Opens a new event activity, send selected date as intent extra
         ui_addNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
