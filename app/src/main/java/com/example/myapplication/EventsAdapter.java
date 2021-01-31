@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 //Custom recycleview adapter to fit our events, they will have title and content.
@@ -16,67 +18,77 @@ import java.util.List;
 //Using Adam Sinicki's tutorial
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder>{
 
-    private List<String> mData;
+    private ArrayList<EventModel> mData;
     private LayoutInflater mInflater;
-    private OnEventPressListener mOnEventPressListener;
+    private OnEventClickListener mOnEventClickListener;
 
-    // data is passed into the constructor
-    public EventsAdapter(Context context, List<String> data, OnEventPressListener onEventPressListener) {
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    public EventsAdapter(Context context, ArrayList<EventModel> data, OnEventClickListener onEventClickListener) {
         this.mInflater = LayoutInflater.from(context);
-        this.mOnEventPressListener = onEventPressListener;
+        this.mOnEventClickListener = onEventClickListener;
+        //this.mData = data;
         this.mData = data;
     }
 
-    // inflates the row layout from xml when needed
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mInflater.inflate(R.layout.event_list_row, parent, false);
-        return new ViewHolder(view,mOnEventPressListener );
+        return new ViewHolder(view,mOnEventClickListener );
     }
 
-    // binds the data to the TextView in each row
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String event = mData.get(position);
-        holder.myTextView.setText(event);
+        //String event = mData.get(position);
+        EventModel model = mData.get(position);
+        holder.myTextView.setText(model.getEventName());
     }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     // total number of rows
     @Override
-    public int getItemCount() {
-        return mData.size();
-    }
+    public int getItemCount() { return mData.size(); }
+
+
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView myTextView;
-        OnEventPressListener onEventPressListener;
+        OnEventClickListener onEventClickListener;
 
-        ViewHolder(View itemView, OnEventPressListener onEventPressListener) {
+        ViewHolder(View itemView, OnEventClickListener onEventClickListener) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.tvTitle);
-            this.onEventPressListener = onEventPressListener;
+            myTextView = itemView.findViewById(R.id.tvEventTitle);
+            this.onEventClickListener = onEventClickListener;
             itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            onEventPressListener.onEventPressClick(getAdapterPosition());
+            onEventClickListener.onEventClick(getAdapterPosition());
         }
     }
 
-    public interface OnEventPressListener{
-        void onEventPressClick(int position);
-    }
 
-    // convenience method for getting data at click position
-    String getItem(int id) {
-        return mData.get(id);
-    }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // parent activity will implement this method to respond to click events
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
+
+    public interface OnEventClickListener{
+        void onEventClick(int position);
     }
 }

@@ -39,9 +39,9 @@ public class NotepadActivity extends AppCompatActivity {
     private String oldString;
 
     //URL string for saving,updating,deleting notes to database
-    String urlInsert = "http://192.168.1.103:8012/project/userNotesInsert.php";
-    String urlUpdate = "http://192.168.1.103:8012/project/userNotesUpdate.php";
-    String urlDelete = "http://192.168.1.103:8012/project/userNotesDelete.php";
+    String urlInsert = "http://192.168.1.103:8012/project/Notepad/userNotesInsert.php";
+    String urlUpdate = "http://192.168.1.103:8012/project/Notepad/userNotesUpdate.php";
+    String urlDelete = "http://192.168.1.103:8012/project/Notepad/userNotesDelete.php";
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

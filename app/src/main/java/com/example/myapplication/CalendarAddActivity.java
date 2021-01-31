@@ -48,7 +48,7 @@ public class CalendarAddActivity extends AppCompatActivity {
     private String calendarDate;
 
     //holder for address to php script that inserts calendar event into database
-    private String urlCalendarEvent="http://192.168.1.103:8012/project/userEventsInsert.php";
+    private String urlCalendarEvent="http://192.168.1.103:8012/project/Calendar/userEventsInsert.php";
     private String userString;
 
     @Override
@@ -60,20 +60,30 @@ public class CalendarAddActivity extends AppCompatActivity {
         ui_eventName = (EditText)findViewById(R.id.etEventName);
         ui_eventDescription = (EditText)findViewById(R.id.etEventDescription);
         ui_eventLocation = (EditText)findViewById(R.id.etEventLocation);
+        ui_eventDate = (EditText)findViewById(R.id.etEventDate);
+        ui_eventTime = (EditText)findViewById(R.id.etEventTime);
         saveButton = (Button)findViewById(R.id.bSaveEvent);
+
+
+        //get Extras if any (always atleast date)
+        if(getIntent().getStringExtra("EXTRA_EVENTDATE") == null) {
+            calendarDate = getIntent().getStringExtra("EXTRA_CALENDAR_DATE");
+        }
+        else{
+            calendarDate = getIntent().getStringExtra("EXTRA_EVENTDATE");
+            ui_eventTime.setText(getIntent().getStringExtra("EXTRA_EVENTTIME"));
+            ui_eventLocation.setText(getIntent().getStringExtra("EXTRA_EVENTLOCATION"));
+            ui_eventDescription.setText(getIntent().getStringExtra("EXTRA_EVENTDESCRIPTION"));
+            ui_eventName.setText(getIntent().getStringExtra("EXTRA_EVENTNAME"));
+        }
+        ui_eventDate.setText(calendarDate);
+        ui_eventDate.setInputType(InputType.TYPE_NULL);
 
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
         //Custom handlers for time and date pickers for their EditText fields, much better UX than number pad, but not 100% necessary
-        ui_eventDate = (EditText)findViewById(R.id.etEventDate);
-        calendarDate = getIntent().getStringExtra("EXTRA_CALENDAR_DATE");
-        Toast.makeText(CalendarAddActivity.this,calendarDate,Toast.LENGTH_LONG).show();
-        ui_eventDate.setText(calendarDate);
-        ui_eventDate.setInputType(InputType.TYPE_NULL);
-
-        //date picker
         ui_eventDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -172,7 +182,7 @@ public class CalendarAddActivity extends AppCompatActivity {
                 RequestQueue requestQueue = Volley.newRequestQueue(CalendarAddActivity.this);
                 requestQueue.add(stringRequest);
                 //close activity
-                //finish();
+                finish();
             }
         });
     }

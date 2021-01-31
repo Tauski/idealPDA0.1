@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tvTitle"
+        android:id="@+id/tvEventTitle"
         android:textSize="16dp"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
@@ -12,8 +12,8 @@
         android:layout_height="match_parent" />
 
     <TextView
-        android:id="@+id/tvContent"
-        android:layout_below="@id/tvTitle"
+        android:id="@+id/tvEventContent"
+        android:layout_below="@id/tvEventTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

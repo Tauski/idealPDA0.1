@@ -39,7 +39,7 @@ public class RegistrationActivity extends AppCompatActivity {
     //Tag for error logs
     private static final String TAG = "FROM REGISTRATION ACTIVITY";
     //url should be http not https while doing local stuff
-    String url = "http://192.168.1.103:8012/project/insert.php";
+    String url = "http://192.168.1.103:8012/project/Credentials/insert.php";
 
     //define ui elements
     private EditText eRegName;

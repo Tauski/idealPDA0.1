@@ -43,14 +43,13 @@ public class NoteSelectActivity extends AppCompatActivity implements NotesAdapte
 
     //Initializing UI and variables
     private ArrayList<String> title;
-    private ArrayList<NotesBuilder> notes;
     private RecyclerView rvNotes;
     private LinearLayoutManager lManager;
     private String userString = "";
     private NotesAdapter adapter;
 
     //Custom url string for php script that retrieves all given users notes
-    private final String urlAllNotes = "http://192.168.1.103:8012/project/userNotesGet.php";
+    private final String urlAllNotes = "http://192.168.1.103:8012/project/Notepad/userNotesGet.php";
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,7 +65,7 @@ public class NoteSelectActivity extends AppCompatActivity implements NotesAdapte
 
         //Init UI and variables
         title = new ArrayList<String>();
-        rvNotes = (RecyclerView)findViewById(R.id.rvNotes);
+        rvNotes = findViewById(R.id.rvNotes);
         rvNotes.setLayoutManager(lManager = new LinearLayoutManager(NoteSelectActivity.this));
         DividerItemDecoration decoration = new DividerItemDecoration(rvNotes.getContext(),lManager.getOrientation());
         rvNotes.addItemDecoration(decoration);
@@ -85,7 +84,9 @@ public class NoteSelectActivity extends AppCompatActivity implements NotesAdapte
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        title.clear();
+                        if(title != null)
+                            title.clear();
+
                         try{
 
                             JSONObject jsonObject = new JSONObject(response);

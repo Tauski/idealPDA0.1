@@ -51,16 +51,14 @@ public class MainActivity extends AppCompatActivity {
     String s_name;
     String s_password;
 
-    //url for calling php script that checks login credentials, should be http not https
-    String url2 = "http://192.168.1.103:8012/project/UserLogin.php";
+    //url for calling php script that checks login credentials, cant use sha
+    private String url2 = "http://192.168.1.103:8012/project/Credentials/UserLogin.php";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         //implementing ui elements
         ui_name = (EditText)findViewById(R.id.etName);
