@@ -51,6 +51,7 @@ public class FrontActivity extends AppCompatActivity {
         ui_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO
                 //Will be implemented after I figure out Google billing and api usage
                 //startActivity(new Intent(FrontActivity.this,MapsActivity.class));
             }
@@ -64,6 +65,7 @@ public class FrontActivity extends AppCompatActivity {
         ui_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO
                 //Will be implemented after I figure out Google billing and api usage
                 //startActivity(new Intent(FrontActivity.this,SearchActivity.class));
             }
@@ -71,6 +73,7 @@ public class FrontActivity extends AppCompatActivity {
         ui_drive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO
                 //Will be implemented after I figure out Google billing and api usage
                 //startActivity(new Intent(FrontActivity.this,DriveActivity.class));
             }
@@ -78,6 +81,7 @@ public class FrontActivity extends AppCompatActivity {
         ui_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //TODO
 
             }
         });

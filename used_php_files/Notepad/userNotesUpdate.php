@@ -2,7 +2,7 @@
 
  if($_SERVER['REQUEST_METHOD']=='POST'){
 
- include 'DatabaseConfig.php';
+ include '../Config/DatabaseConfig.php';
  
  $con = mysqli_connect($HostName,$User,$Password,$dbName,$Port);
  

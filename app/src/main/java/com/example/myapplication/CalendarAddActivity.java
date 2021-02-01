@@ -3,6 +3,7 @@ package com.example.myapplication;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
@@ -44,12 +45,17 @@ public class CalendarAddActivity extends AppCompatActivity {
     private EditText ui_eventDescription;
     private EditText ui_eventTime;
     private EditText ui_eventDate;
-    private Button saveButton;
+    private Button ui_saveButton;
+    private Button ui_deleteButton;
     private String calendarDate;
 
-    //holder for address to php script that inserts calendar event into database
-    private String urlCalendarEvent="http://192.168.1.103:8012/project/Calendar/userEventsInsert.php";
+    //holder for addresses to php script that inserts calendar event into database
+    private String urlCalendarEventAdd="http://192.168.1.103:8012/project/Calendar/userEventsInsert.php";
+    private String urlCalendarEventDelete="http://192.168.1.103:8012/project/Calendar/userEventsDelete.php";
+    private String urlCalendarEventUpdate="htto://192.168.1.103:8012/project/Calendar/userEventsUpdate.php";
+    private String urlString; //Choose between add and update
     private String userString;
+    private String oldString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -62,22 +68,36 @@ public class CalendarAddActivity extends AppCompatActivity {
         ui_eventLocation = (EditText)findViewById(R.id.etEventLocation);
         ui_eventDate = (EditText)findViewById(R.id.etEventDate);
         ui_eventTime = (EditText)findViewById(R.id.etEventTime);
-        saveButton = (Button)findViewById(R.id.bSaveEvent);
+        ui_saveButton = (Button)findViewById(R.id.bSaveEvent);
+        ui_deleteButton = (Button)findViewById(R.id.bEventDelete);
 
+        //get Extras if any (always atleast date) also check if activity should be "update" or "new" type
+        boolean modify = false;
 
-        //get Extras if any (always atleast date)
         if(getIntent().getStringExtra("EXTRA_EVENTDATE") == null) {
             calendarDate = getIntent().getStringExtra("EXTRA_CALENDAR_DATE");
+            urlString = urlCalendarEventAdd;
+            oldString = "placeholder for volley parameters";
         }
         else{
+            modify = true;
             calendarDate = getIntent().getStringExtra("EXTRA_EVENTDATE");
             ui_eventTime.setText(getIntent().getStringExtra("EXTRA_EVENTTIME"));
             ui_eventLocation.setText(getIntent().getStringExtra("EXTRA_EVENTLOCATION"));
             ui_eventDescription.setText(getIntent().getStringExtra("EXTRA_EVENTDESCRIPTION"));
             ui_eventName.setText(getIntent().getStringExtra("EXTRA_EVENTNAME"));
+            urlString = urlCalendarEventUpdate;
+            oldString = ui_eventName.getText().toString();
         }
         ui_eventDate.setText(calendarDate);
         ui_eventDate.setInputType(InputType.TYPE_NULL);
+
+        if (modify){
+            ui_deleteButton.setVisibility(View.VISIBLE);
+        }else{
+            ui_deleteButton.setVisibility(View.INVISIBLE);
+        }
+
 
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -142,11 +162,11 @@ public class CalendarAddActivity extends AppCompatActivity {
         userString = sp2.getString("username",null);
 
         //send event data to database
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        ui_saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, urlCalendarEvent,
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, urlString,
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -172,16 +192,63 @@ public class CalendarAddActivity extends AppCompatActivity {
                         Map<String,String> params = new HashMap<String, String>();
                         params.put("fl_name",userString);
                         params.put("event",ui_eventName.getText().toString());
-                        params.put("edate",ui_eventDate.getText().toString());
-                        params.put("etime",ui_eventTime.getText().toString());
+                        params.put("oldevent", oldString);
                         params.put("elocation",ui_eventLocation.getText().toString());
                         params.put("edescription",ui_eventDescription.getText().toString());
+                        params.put("edate",ui_eventDate.getText().toString());
+                        params.put("etime",ui_eventTime.getText().toString());
                         return params;
                     }
                 };
                 RequestQueue requestQueue = Volley.newRequestQueue(CalendarAddActivity.this);
                 requestQueue.add(stringRequest);
-                //close activity
+                //start new calendar activity so we have updated lists and close this add activity
+                startActivity(new Intent(CalendarAddActivity.this, CalendarActivity.class));
+                finish();
+            }
+        });
+
+
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        ui_deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, urlCalendarEventDelete,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                Toast.makeText(CalendarAddActivity.this,response,Toast.LENGTH_LONG).show();
+
+                                if(response.matches("Event Deleted")){
+                                    Toast.makeText(CalendarAddActivity.this,response.toString(),Toast.LENGTH_LONG).show();
+                                }else{
+                                    Toast.makeText(CalendarAddActivity.this,response.toString(),Toast.LENGTH_LONG).show();
+                                }
+
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(CalendarAddActivity.this,error.toString(),Toast.LENGTH_LONG).show();
+                                Log.i(TAG, "onErrorResponse: FROM CALENDARADDACTIVITY -> " +error.toString());
+                            }
+                        }){
+                    @Override
+                    protected Map<String,String> getParams(){
+                        Map<String,String> params = new HashMap<String, String>();
+                        params.put("fl_name",userString);
+                        params.put("oldevent",oldString);
+                        return params;
+                    }
+                };
+                RequestQueue requestQueue = Volley.newRequestQueue(CalendarAddActivity.this);
+                requestQueue.add(stringRequest);
+                //start new calendar activity so we have updated lists and close this add activity
+                startActivity(new Intent(CalendarAddActivity.this, CalendarActivity.class));
                 finish();
             }
         });

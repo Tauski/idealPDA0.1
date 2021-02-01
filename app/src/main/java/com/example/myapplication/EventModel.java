@@ -2,6 +2,9 @@ package com.example.myapplication;
 
 import android.provider.CalendarContract;
 
+
+//Simple event model class holds all variables/data that single calendar event needs
+//use this to populate arraylist in calendar activity.
 public class EventModel {
 
     private String eventName;

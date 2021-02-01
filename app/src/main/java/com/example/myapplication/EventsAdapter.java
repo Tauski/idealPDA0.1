@@ -13,7 +13,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-//Custom recycleview adapter to fit our events, they will have title and content.
+//Custom recycleview adapter to fit our events, they will be made according to eventmodel class.
 //By clicking events we will open it and enable modifications
 //Using Adam Sinicki's tutorial
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder>{

@@ -62,11 +62,10 @@ public class NotepadActivity extends AppCompatActivity {
         userString = sp1.getString("username",null);
 
         //Check if activity started with intent extra (opened existing note),
-        //if yes set url as update type, and if no set oldString as something
+        //if yes set url as update type, and if no set oldString as something as volley cant handle null parameters
         ui_text = (EditText) findViewById(R.id.etWrite);
         oldString = getIntent().getStringExtra("EXTRA_NOTE");
         if(oldString == null){
-
             oldString = "filling";
         }
         else
@@ -76,8 +75,6 @@ public class NotepadActivity extends AppCompatActivity {
             urlInsert = urlUpdate;
             ui_text.setText(oldString);
         }
-
-
 
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -44,7 +44,6 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
     private static final String TAG = "FROM CALENDAR ACTIVITY";
 
     //Initializing UI elements and variables
-    //private ArrayList<String> eventList;
     private ArrayList<EventModel> eventArrayList;
     private CalendarView ui_calendar;
     private FloatingActionButton ui_addNewEvent;
@@ -90,10 +89,12 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
                 String curMonth = String.valueOf(month+1);
                 String curDay = String.valueOf(day);
                 date = curYear + "-" + curMonth + "-" + curDay;
+
+                //populate Arraylist<EventModel> with given dates events.
                 retrieveEvents();
             }
         });
-        //Opens a new event activity, send selected date as intent extra
+        //Opens a new CalendarAddActivity, send selected date as intent extra
         ui_addNewEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,8 +102,10 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
                 Intent intent = new Intent(CalendarActivity.this,CalendarAddActivity.class);
                 intent.putExtra("EXTRA_CALENDAR_DATE",date);
                 startActivity(intent);
+                finish();
             }
         });
+
     }
 
 
@@ -114,8 +117,7 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        //Toast.makeText(CalendarActivity.this, response, Toast.LENGTH_SHORT).show();
-                        //eventList.clear();
+                        //Clear arrays every time we retrieve events so no appending happens. also notify adapter to show changes
                         if(eventArrayList != null)
                             eventArrayList.clear();
                             eventsAdapter.notifyDataSetChanged();
@@ -126,19 +128,15 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
 
                             if(sucess.equals("1")){
-
                                 for(int i=0;i<jsonArray.length();i++){
                                     JSONObject object = jsonArray.getJSONObject(i);
-                                    //String event = object.getString("event");
-                                    //eventList.add(event);
-                                    //eventsAdapter.notifyDataSetChanged();
+                                    //Create new event models for all incoming data and add them to array
                                     EventModel model = new EventModel(
                                             object.getString("event"),
                                             object.getString("description"),
                                             object.getString("location"),
                                             object.getString("dateofevent"),
                                             object.getString("timeofevent"));
-                                    Toast.makeText(getApplicationContext(), model.getEventTime(),Toast.LENGTH_LONG ).show();
                                     eventArrayList.add(model);
                                     eventsAdapter.notifyDataSetChanged();
                                 }
@@ -176,15 +174,15 @@ public class CalendarActivity extends AppCompatActivity implements EventsAdapter
     @Override
     public void onEventClick(int position) {
 
-        //eventArrayList.get(position);
-        Toast.makeText(this,"click notified", Toast.LENGTH_SHORT).show();
+        //On event clicked we open CalendarAddActivity with extra intent (namely all event details)
         Intent intent = new Intent(getApplicationContext(),CalendarAddActivity.class);
         intent.putExtra("EXTRA_EVENTTIME", eventArrayList.get(position).getEventTime());
         intent.putExtra("EXTRA_EVENTNAME",eventArrayList.get(position).getEventName());
         intent.putExtra("EXTRA_EVENTDATE",eventArrayList.get(position).getEventDate());
         intent.putExtra("EXTRA_EVENTLOCATION",eventArrayList.get(position).getEventLocation());
         intent.putExtra("EXTRA_EVENTDESCRIPTION",eventArrayList.get(position).getEventDescription());
-
         startActivity(intent);
+        //close this activity
+        finish();
     }
 }
